@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
-import { Content } from '../../enum/Content';
 import { Cell } from '../cell/cell';
+import './mine-field.css';
 
 export interface IMineFieldPram {
     rightClickAction: (row: number, col: number) => void;
@@ -8,8 +8,10 @@ export interface IMineFieldPram {
 }
 export const MineField: FunctionComponent<IMineFieldPram> = (props) => {
     const mineField =
-        <div>
-            {createMineField(props.leftClickAction,props.rightClickAction)}
+        <div className={'width-fill'}>
+            <div className={'mine-field'}>
+                {createMineField(props.leftClickAction, props.rightClickAction)}
+            </div>
         </div>
     return mineField;
 }
@@ -20,14 +22,14 @@ const createMineField = (
     const lines: JSX.Element[] = [];
     for (let i = 0; i <= 15; i++) {
         const line = (
-            <div>
+            <div className={'line'}>
                 {
                     ((): JSX.Element[] => {
                         const cells: JSX.Element[] = [];
                         for (let j = 0; j <= 29; j++) {
                             const cell = <Cell
                                 row={i}
-                                col={j}                              
+                                col={j}
                                 leftClickAction={leftClickAction}
                                 righClickAction={rightClickAction}
                             />

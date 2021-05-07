@@ -1,4 +1,10 @@
-import React,{useState,useEffect,FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
+import './unopened-block.css'
 export const UnopenedBlock:FunctionComponent = ()=>{
-    return <h1></h1>
+    const unopenedBlock = 
+    <div className={'width-full height-full unopened-block'}>
+
+    </div>
+
+    return unopenedBlock;
 }

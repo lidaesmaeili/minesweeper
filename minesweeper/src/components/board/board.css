@@ -1,0 +1,23 @@
+.board-container{
+    display: flex;
+    flex-direction: column;
+}
+#top-bar{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    background-color: #c0c0c0;
+    height: 4rem;
+    border-style:inset;
+    border-color: #808080 #808080 #ffffff #808080;
+    border-width: 3px;
+}
+.top-bar-item{
+    width:33.333%;
+    height: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    display: flex;   
+    align-content: center;
+    justify-content: center;
+}
