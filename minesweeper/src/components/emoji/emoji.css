@@ -1,0 +1,26 @@
+#emoji-btn{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    box-sizing: border-box;
+    width: 3rem;
+    height: 2.5rem;
+    background-color: #c6c6c6;
+    padding: 0.2rem;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #ffffff #808080 #808080  #ffffff;
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+.jester{
+    background-image: url('../../resource/image/joker.png');   
+}
+.skull{
+    background-image: url('../../resource/image/skull.png');
+}
+.victory{
+    background-image: url('../../resource/image/peace.png');
+}
