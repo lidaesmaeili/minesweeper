@@ -1,5 +1,4 @@
-export enum Content{
-    unchanged,
+export enum Content{   
     flag,
     questonMark,
     explodedMine,
