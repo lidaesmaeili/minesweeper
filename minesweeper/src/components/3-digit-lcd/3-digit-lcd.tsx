@@ -1,11 +1,13 @@
-import {useState,FunctionComponent} from 'react';
+import {useState,FunctionComponent, useEffect} from 'react';
 import './3-digit-lcd.css';
 export interface ILcdParam{
     value:number
 }
-export const Lcd:FunctionComponent<ILcdParam> = (params)=>{
-    const [value,setValue] = useState(valueConvertor(params.value));
-
+export const Lcd:FunctionComponent<ILcdParam> = (props)=>{
+    const [value,setValue] = useState(valueConvertor(props.value));
+    useEffect(()=>{
+        setValue(valueConvertor(props.value));
+    })
     const lcd = 
     <div className={'lcd'}>
         {value}

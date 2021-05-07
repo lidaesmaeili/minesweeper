@@ -12,8 +12,9 @@ export const Emoji: FunctionComponent<IEmojiParam> = (props) => {
             className={(playerState === PlayerState.notStarted ||
                 playerState === PlayerState.playing) ? 'jester' :
                 ((playerState === PlayerState.lost) ?
-                    'skull' : 'victory')}>
-
+                    'skull' : 'victory')}
+                    onClick = {()=>{window.location.reload()}}
+                    >
         </div>
     return emoji;
 }
