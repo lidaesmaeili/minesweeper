@@ -5,35 +5,47 @@ import { Emoji } from '../emoji/emoji';
 import { MineField } from '../mine-field/mine-field';
 import { ICell } from '../../interfaces/ICell';
 import { Content } from '../../enum/Content';
-import {PlayerState} from '../../enum/player-state';
+import { PlayerState } from '../../enum/player-state';
+import './board.css';
 
 export const Board: FunctionComponent = () => {
     const [logicalGameState, setlogicalGameState] = useState<[ICell[]]>(initGameState());
     const [isGameStarted, setIsGameStarted] = useState(false);
-    const [remainingMines,setRemainingMines] = useState(99);
-    const [playerState,setPlayerState] = useState<PlayerState>(PlayerState.notStarted)
+    const [remainingMines, setRemainingMines] = useState(99);
+    const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.notStarted)
     const board = (
         <Fragment>
-            <Counter remainingMines = {remainingMines}/>
-            <Emoji playerState = {playerState} />
-            <Timer isTimerStarted = {isGameStarted} />
-            <MineField
-             leftClickAction = {leftClickAction}
-             rightClickAction = {rightClickAction}/>
+            <div className={'width-fill height-fill board-container'}>
+                <div id={'top-bar'} className={'width-full'}>
+                    <div className={'top-bar-item'}>
+                        <Counter remainingMines={remainingMines} />
+                    </div>
+                    <div className={'top-bar-item'}>
+                        <Emoji playerState={playerState} />
+                    </div>
+                    <div className={'top-bar-item'}>
+                        <Timer isTimerStarted={isGameStarted} />
+                    </div>
+                </div>
+                <MineField
+                    leftClickAction={leftClickAction}
+                    rightClickAction={rightClickAction} />
+            </div>
         </Fragment>
+
     );
     return board;
 }
 
 const leftClickAction = (row: number, col: number): void => {
-    alert('left is clicked!')
+    alert(`${row} ${col}`)
 }
 
-const rightClickAction = (row:number, col:number):void =>{
-    alert('right is clicked!')
+const rightClickAction = (row: number, col: number): void => {
+    alert(`${row} ${col}`)
 }
 
-const scatterMines = ():void =>{
+const scatterMines = (): void => {
 
 }
 
@@ -45,10 +57,10 @@ const initGameState = (): [ICell[]] => {
                 isOpened: false,
                 content: Content.unopenedBlock,
                 hasMine: false,
-                adjacentMinesCount:0                
+                adjacentMinesCount: 0
             }
             gameState[row] = []
-            gameState[row] [col] = cell;
+            gameState[row][col] = cell;
         }
     }
     return gameState;

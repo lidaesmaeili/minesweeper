@@ -1,0 +1,7 @@
+.line{
+    display: flex;
+    flex-direction: row;
+}
+.mine-field{
+    width:fit-content;   
+}

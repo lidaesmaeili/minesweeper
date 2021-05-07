@@ -1,5 +1,12 @@
 .solidBorder{
-    border-style: solid;
+    border-left-style:outset;
+    border-top-style:outset;
+    border-left-color: #ffffff;
+    border-top-color: #ffffff;
+    border-right-style: outset;
+    border-bottom-style: outset;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
     border-width: 1px;
 }
 .doteedBorder{
@@ -7,5 +14,8 @@
     border-width: 1px;
 }
 .cell{
-    
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    flex-direction: column;
 }

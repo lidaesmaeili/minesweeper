@@ -16,19 +16,22 @@ export interface ICellParam{
 
 export const Cell:FunctionComponent<ICellParam> = (props)=>{
     const [cellId] = 
-    useState(`cell-${props.row.toString().padStart(2,'0')}${props.col.toString().padStart(2,'0')}`)
+    useState(`cell-${props.row.toString().padStart(2,'0')}${props.col.toString()
+        .padStart(2,'0')}`)
     const [content,setContent] = useState<Content>(Content.unopenedBlock);
     const [isOpened,setIsOpened] = useState(false);   
     const[row] = useState(props.row);
     const [col] = useState(props.col);
     const [adjacentMinesCount,setAdjacentMinesCount] = useState(0);
-    const [cssClasses,setCssClasses] = useState<string>(solidBorder);
+    const [cssClasses,setCssClasses] = useState<string>(setCellCss(false,Content.unopenedBlock));
 
     const cell = 
      <div
      className = {cssClasses} 
       id={cellId}
-      onClick={()=>{props.leftClickAction(row,col)}}>
+      onClick={()=>{props.leftClickAction(row,col)}}
+      onContextMenu={(e)=>{e.preventDefault(); props.righClickAction(row,col);}}
+      >
          {
              (isOpened===true)?((content===Content.number)?
              <Number value={adjacentMinesCount} />:((content===Content.explodedMine)?
@@ -39,8 +42,27 @@ export const Cell:FunctionComponent<ICellParam> = (props)=>{
      return cell;
 }
 
-const createCellCss = (isOpened:boolean, content:Content):()=>string=>{
+const setCellCss = (isOpened:boolean,content:Content):string=>{
+    const cell = 'cell'
     const solidBorder = 'solidBorder';
     const doteedBorder = 'dotedBorder';
+    let cssClasses = cell;
+    if(!isOpened){
+        cssClasses +=' ';
+        cssClasses+=solidBorder;
+    }
+    else{
+        if(content === Content.explodedMine){
+            cssClasses += ' ';
+            cssClasses+=solidBorder;
+        }
+        else if(content===Content.number || content===Content.clearedBlock){
+            cssClasses += ' ';
+            cssClasses+=solidBorder;
+        }
+    }
+    return cssClasses;
 }
+
+
 
