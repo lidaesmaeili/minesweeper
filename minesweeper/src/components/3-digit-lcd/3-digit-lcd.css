@@ -1,0 +1,14 @@
+
+.lcd{
+    width: 6rem;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    color: red;
+    font-family: Digital;
+    font-size: 2rem;
+    box-sizing: border-box;
+    border-style: inset;
+    border-color:#656565 #ffffff #656565 #656565;
+}

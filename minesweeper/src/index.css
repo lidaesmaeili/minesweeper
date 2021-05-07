@@ -35,3 +35,8 @@ code {
 .relative{
   position: relative;
 }
+
+@font-face {
+  font-family: Digital;
+  src: url('./resource/fonts/digital-7.ttf');
+}
