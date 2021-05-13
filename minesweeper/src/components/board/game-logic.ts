@@ -41,7 +41,7 @@ export const cleanField =
                 isExploded: false
             } as ICleanFieldResult;
         if (gameState[row][col].hasMine) {
-            blowupBoard(result.newGameState);
+            blowupBoard(15, 29, result.newGameState);
             result.isExploded = true;
         }
         else {
@@ -51,9 +51,11 @@ export const cleanField =
         return result;
     }
 
-export const blowupBoard = (gameState: [ICell[]]): void => {
-    for (let row = 0; row <= 15; row++) {
-        for (let col = 0; col <= 29; col++) {
+export const blowupBoard = (rowUpperBound: number,
+    colUpperBound: number,
+    gameState: [ICell[]]): void => {
+    for (let row = 0; row <= rowUpperBound; row++) {
+        for (let col = 0; col <= colUpperBound; col++) {
             if (gameState[row][col].hasMine) {
                 gameState[row][col].isOpened = true;
                 gameState[row][col].content = Content.explodedMine
@@ -75,7 +77,7 @@ export const openCell = (row: number, col: number, gameState: [ICell[]]): void =
 
         gameState[popedCellIndex.row][popedCellIndex.col].isOpened = true;
         const adjacentCellsIndex =
-            getAdjacentCellsIndex(popedCellIndex.row, popedCellIndex.col);
+            getAdjacentCellsIndex(15, 29, popedCellIndex.row, popedCellIndex.col);
         let adjacentMinesCount = 0;
         for (let i = 0; i <= 7; i++) {
             if (adjacentCellsIndex[i] == null)
@@ -109,41 +111,63 @@ export const openCell = (row: number, col: number, gameState: [ICell[]]): void =
     }
 }
 
-export const getAdjacentCellsIndex = (row: number, col: number): (IPair | null)[] => {
+export const getAdjacentCellsIndex = (
+    rowUpperBound: number,
+    colUpperBound: number,
+    row: number,
+    col: number): (IPair | null)[] => {
     const adjacentCellsIndex: (IPair | null)[] = [];
     let tempRow = 0;
     let tempCol = 0;
     /* Left Cell */
     tempRow = row;
     tempCol = col - 1;
-    adjacentCellsIndex[0] = (tempCol >= 0) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[0] =
+        (tempCol >= 0) ? { row: tempRow, col: tempCol } : null;
     /*Top Left Cell */
     tempRow = row - 1;
     tempCol = col - 1;
-    adjacentCellsIndex[1] = (tempCol >= 0 && tempRow >= 0) ? { row: tempRow, col: tempCol } : null
+    adjacentCellsIndex[1] =
+        (tempCol >= 0 && tempRow >= 0) ?
+            { row: tempRow, col: tempCol } : null
     /* Top Cell */
     tempRow = row - 1;
     tempCol = col;
-    adjacentCellsIndex[2] = (tempRow >= 0) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[2] =
+        (tempRow >= 0) ? { row: tempRow, col: tempCol } : null;
     /* Top Right Cell */
     tempRow = row - 1;
     tempCol = col + 1;
-    adjacentCellsIndex[3] = (tempCol <= 29 && tempRow >= 0) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[3] =
+        (tempCol <= colUpperBound && tempRow >= 0) ?
+            { row: tempRow, col: tempCol } : null;
     /* Right Cell */
     tempRow = row;
     tempCol = col + 1;
-    adjacentCellsIndex[4] = (tempCol <= 29) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[4] =
+        (tempCol <= colUpperBound) ?
+            { row: tempRow, col: tempCol } : null;
     /* Bottom Right */
     tempRow = row + 1;
     tempCol = col + 1;
-    adjacentCellsIndex[5] = (tempCol <= 29 && tempRow <= 15) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[5] =
+        (tempCol <= colUpperBound && tempRow <= rowUpperBound) ?
+            { row: tempRow, col: tempCol } : null;
     /* Bottom Right */
     tempRow = row + 1;
     tempCol = col;
-    adjacentCellsIndex[6] = (tempRow <= 15) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[6] =
+        (tempRow <= rowUpperBound) ?
+            { row: tempRow, col: tempCol } : null;
     /* Bottom Left */
     tempRow = row + 1;
     tempCol = col - 1;
-    adjacentCellsIndex[7] = (tempRow <= 15 && tempCol >= 0) ? { row: tempRow, col: tempCol } : null;
+    adjacentCellsIndex[7] =
+        (tempRow <= rowUpperBound && tempCol >= 0) ?
+            { row: tempRow, col: tempCol } : null;
     return adjacentCellsIndex;
+}
+
+export const isGameFinished = (gameState:[ICell[]]):boolean=>{
+    return false;
 }
