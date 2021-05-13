@@ -4,7 +4,7 @@ import './mine-field.css';
 
 export interface IMineFieldPram {
     rightClickAction: (row: number, col: number) => void;
-    leftClickAction: (row: number, col: number) => void;
+    leftClickAction: (row: number, col: number) => void;    
 }
 export const MineField: FunctionComponent<IMineFieldPram> = (props) => {
     const mineField =
