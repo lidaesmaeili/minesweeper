@@ -4,5 +4,5 @@ export interface ICell {
     isOpened: boolean;
     content: Content;
     hasMine: boolean;
-    adjacentMinesCount:number;
+    adjacentMinesCount:number | null;
 }

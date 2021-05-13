@@ -26,9 +26,7 @@ export const scatterMines = (safeRow: number, safeCol: number):
             reservedCells[randomRow][randomCol] = true;
             pairs.push({ row: randomRow, col: randomCol });
             counter += 1;
-        }
-        console.log('scattered', pairs);
-        console.log('mines count', pairs.length);
+        }       
         resolve(pairs);
     });
 }
@@ -45,7 +43,7 @@ export const cleanField =
             result.isExploded = true;
         }
         else {
-            openCell(row, col, result.newGameState);
+            openCell(15, 29, row, col, result.newGameState);
             result.isExploded = false;
         }
         return result;
@@ -64,20 +62,24 @@ export const blowupBoard = (rowUpperBound: number,
     }
 }
 
-export const openCell = (row: number, col: number, gameState: [ICell[]]): void => {
+export const openCell = (rowUpperBound: number,
+    colUpperBound: number,
+    row: number,
+    col: number,
+    gameState: [ICell[]]): void => {
     const stack: IPair[] = [];
     const registeredInStack: [boolean[]] = [[]];
     stack.push({ row: row, col: col });
+    registeredInStack[row] = [];
     registeredInStack[row][col] = true;
 
     while (stack.length !== 0) {
         const popedCellIndex = stack.pop();
         if (popedCellIndex == undefined)
             break;
-
         gameState[popedCellIndex.row][popedCellIndex.col].isOpened = true;
         const adjacentCellsIndex =
-            getAdjacentCellsIndex(15, 29, popedCellIndex.row, popedCellIndex.col);
+            getAdjacentCellsIndex(rowUpperBound, colUpperBound, popedCellIndex.row, popedCellIndex.col);
         let adjacentMinesCount = 0;
         for (let i = 0; i <= 7; i++) {
             if (adjacentCellsIndex[i] == null)
@@ -93,14 +95,24 @@ export const openCell = (row: number, col: number, gameState: [ICell[]]): void =
         if (adjacentMinesCount === 0) {
             gameState[popedCellIndex.row][popedCellIndex.col].content =
                 Content.clearedBlock;
-
+            gameState[popedCellIndex.row][popedCellIndex.col].adjacentMinesCount =
+                null;
             adjacentCellsIndex.forEach((i) => {
-                if (registeredInStack[i?.row as number][i?.col as number] !== true) {
-                    registeredInStack[i?.row as number][i?.col as number] = true;
-                    stack.push({ row: i?.row as number, col: i?.col as number });
+
+                if (i != null) {
+                    try {
+                        if (registeredInStack[i?.row as number][i?.col as number] !== true) {
+                            registeredInStack[i?.row as number][i?.col as number] = true;
+                            stack.push({ row: i?.row as number, col: i?.col as number });
+                        }
+                    }
+                    catch {
+                        registeredInStack[i?.row as number] = [];
+                        registeredInStack[i?.row as number][i?.col as number] = true;
+                        stack.push({ row: i?.row as number, col: i?.col as number });
+                    }
                 }
             })
-
         }
         else {
             gameState[popedCellIndex.row][popedCellIndex.col].content =
@@ -168,6 +180,6 @@ export const getAdjacentCellsIndex = (
     return adjacentCellsIndex;
 }
 
-export const isGameFinished = (gameState:[ICell[]]):boolean=>{
+export const isGameFinished = (gameState: [ICell[]]): boolean => {
     return false;
 }
