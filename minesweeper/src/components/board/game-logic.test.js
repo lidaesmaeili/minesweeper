@@ -259,3 +259,45 @@ test('open cell 1,2 clicked!', () => {
 })
 
 /* Open Cell Test 5 */
+const openCellSample5 =
+    [
+        [
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+        ],
+        [
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+        ],
+        [
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+            { isOpened: false, hasMine: false, adjacentMinesCount: null, content: 5 },
+        ]
+    ]
+
+    const opeCellSampleResult5 =
+    [
+        [
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+        ],
+        [
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+        ],
+        [
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+            { isOpened: true, hasMine: false, adjacentMinesCount: null, content: 4 },
+        ]
+    ];
+
+    test('open cell 2,2 clicked - All cleared!', () => {
+        openCell(2, 2, 2, 2, openCellSample5);
+        expect(openCellSample5).toStrictEqual(opeCellSampleResult5);
+    })
