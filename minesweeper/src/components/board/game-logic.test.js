@@ -83,4 +83,4 @@ test('blow up board',()=>{
     blowupBoard(2,2,gameStateSample1);    
     expect(gameStateSample1).toStrictEqual(gameStateSampleChanged1);
 })
-/* Open Cell Test */
+/* Open Cell Test 1 */

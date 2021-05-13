@@ -6,7 +6,7 @@ import { MineField } from '../mine-field/mine-field';
 import { ICell } from '../../interfaces/ICell';
 import { Content } from '../../enum/Content';
 import { PlayerState } from '../../enum/player-state';
-import { IPair, scatterMines, cleanField, isGameFinished } from './game-logic'
+import { IPair, scatterMines, cleanField, isGameFinished, ICleanFieldResult } from './game-logic'
 import './board.css';
 
 
@@ -14,7 +14,7 @@ export const Board: FunctionComponent = () => {
 
     const [logicalGameState, setlogicalGameState] = useState<[ICell[]] | null>(null);
     const [hasGameStarted, setIsGameStarted] = useState(false);
-    const [isTimerStopped,setIsTimerStopped] = useState(false);
+    const [isTimerStopped, setIsTimerStopped] = useState(false);
     const [remainingMines, setRemainingMines] = useState(99);
     const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.notStarted);
     let isClickAllowed = true;
@@ -26,39 +26,47 @@ export const Board: FunctionComponent = () => {
     const leftClickAction = (row: number, col: number): void => {
         if (!isClickAllowed)
             return;
+
+        let result: ICleanFieldResult | null = null;
+        setMouseClicks(true)();
         if (!hasGameStarted) {
-            setMouseClicks(true)();
             scatterMines(row, col).then((pairs: IPair[]) => {
                 setPlayerState(PlayerState.playing);
                 setIsGameStarted(true);
-                const newLogicalGameState = logicalGameState as [ICell[]];                
+                const newLogicalGameState = logicalGameState as [ICell[]];
                 pairs.forEach((p) => {
                     newLogicalGameState[p.row][p.col].hasMine = true;
-                })                
-                const result = cleanField(row, col, newLogicalGameState as [ICell[]]); 
+                })
+                result =
+                    cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;
                 setlogicalGameState(result.newGameState);
-                if (result.isExploded) {
-                    setIsTimerStopped(true)
-                    setMouseClicks(true)();
-                    setPlayerState(PlayerState.lost);
-                }
-                else {
-                    if (!isGameFinished(result.newGameState as [ICell[]])){
-                        setMouseClicks(false)();
-                    }
-                    else{
-                        setIsTimerStopped(true)
-                        setMouseClicks(true)();
-                        setPlayerState(PlayerState.won);
-                    }
-                }
-
+                handleBoardAfterLeftClick(result)
             })
         }
         else {
-            isClickAllowed = false;
+            const newLogicalGameState = logicalGameState as [ICell[]];
+            result =
+                cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;
+            setlogicalGameState(result.newGameState);
+            handleBoardAfterLeftClick(result);
+        }
+    }
 
-            isClickAllowed = true;
+    const handleBoardAfterLeftClick = (result: ICleanFieldResult) => {
+        if (result.isExploded) {
+            setIsTimerStopped(true)
+            setMouseClicks(true)();
+            setPlayerState(PlayerState.lost);
+        }
+        else {
+            if (!isGameFinished(result.newGameState as [ICell[]])) {
+                setMouseClicks(false)();
+            }
+            else {
+                setIsTimerStopped(true)
+                setMouseClicks(true)();
+                setPlayerState(PlayerState.won);
+            }
         }
     }
 
@@ -70,39 +78,41 @@ export const Board: FunctionComponent = () => {
         }
         else {
             return () => {
-                isClickAllowed = true;               
+                isClickAllowed = true;
             }
         }
     }
 
     const rightClickAction = (row: number, col: number): void => {
-        if(!isClickAllowed)
+        if (!isClickAllowed)
             return;
-        if(logicalGameState == null)
+        if (logicalGameState == null)
             return;
-        if(logicalGameState[row][col].isOpened)
+        if (logicalGameState[row][col].isOpened)
             return;
         setMouseClicks(true)();
         const newLogicalGameState = logicalGameState;
-        if(newLogicalGameState[row][col].content === Content.unopenedBlock){
+        if (newLogicalGameState[row][col].content === Content.unopenedBlock) {            
             newLogicalGameState[row][col].content = Content.flag;
+            setRemainingMines(remainingMines - 1);
             setlogicalGameState(newLogicalGameState);
             setMouseClicks(false)();
             return;
         }
-        else if(newLogicalGameState[row][col].content === Content.flag){
+        else if (newLogicalGameState[row][col].content === Content.flag) {
             newLogicalGameState[row][col].content = Content.questonMark;
+            setRemainingMines(remainingMines + 1);
             setlogicalGameState(newLogicalGameState);
             setMouseClicks(false)();
             return;
         }
-        else if(newLogicalGameState[row][col].content === Content.questonMark){
+        else if (newLogicalGameState[row][col].content === Content.questonMark) {
             newLogicalGameState[row][col].content = Content.unopenedBlock;
             setlogicalGameState(newLogicalGameState);
             setMouseClicks(false)();
             return;
         }
-        else{
+        else {            
             setMouseClicks(false)();
             return;
         }
@@ -120,7 +130,7 @@ export const Board: FunctionComponent = () => {
                     </div>
                     <div className={'top-bar-item'}>
                         <Timer isTimerStopped={isTimerStopped}
-                         isTimerStarted={hasGameStarted} />
+                            isTimerStarted={hasGameStarted} />
                     </div>
                 </div>
                 <MineField
