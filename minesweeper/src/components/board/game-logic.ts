@@ -1,5 +1,6 @@
 import { Content } from '../../enum/Content';
-import { ICell } from '../../interfaces/ICell'
+import { ICell } from '../../interfaces/ICell';
+let totalClearedCells = 0;
 export interface IPair {
     row: number;
     col: number;
@@ -9,26 +10,28 @@ export interface ICleanFieldResult {
     newGameState: [ICell[]];
 }
 export const scatterMines = (safeRow: number, safeCol: number):
-    Promise<IPair[]> => {
-    return new Promise((resolve) => {
-        const reservedCells: [boolean[]] = [[]];
-        const pairs: IPair[] = [];
-        let counter = 0;
-        while (counter < 99) {
-            const randomCol = Math.floor(Math.random() * 30);
-            const randomRow = Math.floor(Math.random() * 16);
-            if (randomCol === safeCol && randomRow === safeRow)
-                continue;
-            if (reservedCells[randomRow] && reservedCells[randomRow][randomCol])
-                continue;
+    IPair[] => {
 
+    const reservedCells: [boolean[]] = [[]];
+    const pairs: IPair[] = [];
+    let counter = 0;
+    while (counter !== 99) {
+        const randomCol = Math.floor(Math.random() * 30);
+        const randomRow = Math.floor(Math.random() * 16);
+        if (randomCol === safeCol && randomRow === safeRow) {
+            continue;
+        }
+        if (reservedCells[randomRow] && reservedCells[randomRow][randomCol] === true) {
+            continue;
+        }
+
+        if (reservedCells[randomRow] == undefined)
             reservedCells[randomRow] = [];
-            reservedCells[randomRow][randomCol] = true;
-            pairs.push({ row: randomRow, col: randomCol });
-            counter += 1;
-        }       
-        resolve(pairs);
-    });
+        reservedCells[randomRow][randomCol] = true;
+        pairs.push({ row: randomRow, col: randomCol });
+        counter = counter + 1;
+    }
+    return pairs
 }
 
 export const cleanField =
@@ -36,7 +39,7 @@ export const cleanField =
         const result =
             {
                 newGameState: gameState,
-                isExploded: false
+                isExploded: false,
             } as ICleanFieldResult;
         if (gameState[row][col].hasMine) {
             blowupBoard(15, 29, result.newGameState);
@@ -77,6 +80,7 @@ export const openCell = (rowUpperBound: number,
         const popedCellIndex = stack.pop();
         if (popedCellIndex == undefined)
             break;
+        totalClearedCells++;
         gameState[popedCellIndex.row][popedCellIndex.col].isOpened = true;
         const adjacentCellsIndex =
             getAdjacentCellsIndex(rowUpperBound, colUpperBound, popedCellIndex.row, popedCellIndex.col);
@@ -180,6 +184,8 @@ export const getAdjacentCellsIndex = (
     return adjacentCellsIndex;
 }
 
-export const isGameFinished = (gameState: [ICell[]]): boolean => {
-    return false;
+export const isGameFinished = (clearCellCount: number): boolean => {
+    console.log(totalClearedCells)
+    const isGameFinished = (clearCellCount === totalClearedCells) ? true : false;
+    return isGameFinished;
 }

@@ -1,4 +1,8 @@
-import React,{useState,useEffect,FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
 export const ClearedBlock:FunctionComponent = ()=>{
-    return <h1></h1>
+    const clearedBlock = 
+    <div className={`width-full height-full wheat-back-color`}>
+
+    </div>
+    return clearedBlock;
 }
