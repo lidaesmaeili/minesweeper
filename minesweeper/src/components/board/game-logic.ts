@@ -1,12 +1,13 @@
 import { Content } from '../../enum/Content';
-import { ICell } from '../../interfaces/ICell'
+import { ICell } from '../../interfaces/ICell';
+let totalClearedCells = 0;
 export interface IPair {
     row: number;
     col: number;
 }
 export interface ICleanFieldResult {
     isExploded: boolean;
-    newGameState: [ICell[]];
+    newGameState: [ICell[]];   
 }
 export const scatterMines = (safeRow: number, safeCol: number):
     IPair[] => {
@@ -14,19 +15,22 @@ export const scatterMines = (safeRow: number, safeCol: number):
     const reservedCells: [boolean[]] = [[]];
     const pairs: IPair[] = [];
     let counter = 0;
-    while (counter < 99) {
+    while (counter !== 99) {
         const randomCol = Math.floor(Math.random() * 30);
-        const randomRow = Math.floor(Math.random() * 16);
-        if (randomCol === safeCol && randomRow === safeRow)
+        const randomRow = Math.floor(Math.random() * 16);        
+        if (randomCol === safeCol && randomRow === safeRow){           
             continue;
-        if (reservedCells[randomRow] && reservedCells[randomRow][randomCol])
+        }
+        if (reservedCells[randomRow] && reservedCells[randomRow][randomCol]===true) {                
             continue;
-
-        reservedCells[randomRow] = [];
+        }
+        
+        if(reservedCells[randomRow] == undefined)
+            reservedCells[randomRow] = [];
         reservedCells[randomRow][randomCol] = true;
         pairs.push({ row: randomRow, col: randomCol });
-        counter += 1;
-    }
+        counter = counter+1;
+    }   
     return pairs
 }
 
@@ -35,7 +39,7 @@ export const cleanField =
         const result =
             {
                 newGameState: gameState,
-                isExploded: false
+                isExploded: false,               
             } as ICleanFieldResult;
         if (gameState[row][col].hasMine) {
             blowupBoard(15, 29, result.newGameState);
@@ -73,7 +77,8 @@ export const openCell = (rowUpperBound: number,
     registeredInStack[row][col] = true;
 
     while (stack.length !== 0) {
-        const popedCellIndex = stack.pop();
+        const popedCellIndex = stack.pop();   
+        totalClearedCells++;        
         if (popedCellIndex == undefined)
             break;
         gameState[popedCellIndex.row][popedCellIndex.col].isOpened = true;
@@ -179,6 +184,7 @@ export const getAdjacentCellsIndex = (
     return adjacentCellsIndex;
 }
 
-export const isGameFinished = (gameState: [ICell[]]): boolean => {
-    return false;
+export const isGameFinished = (clearCellCount:number): boolean => {
+    const isGameFinished  = (clearCellCount === totalClearedCells)?true:false;
+    return isGameFinished;
 }

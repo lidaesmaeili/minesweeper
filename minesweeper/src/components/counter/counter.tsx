@@ -7,8 +7,7 @@ export const Counter:FunctionComponent<ICounterParam> = (props)=>{
 
     const [remainingMines,setRemainingMines] =
      useState(props.remainingMines);
-    useEffect(()=>{
-        console.log('Counter')
+    useEffect(()=>{       
         setRemainingMines(props.remainingMines)
     },[props.remainingMines])
     const counter = 

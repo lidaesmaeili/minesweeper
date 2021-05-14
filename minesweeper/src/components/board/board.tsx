@@ -17,7 +17,7 @@ export const Board: FunctionComponent = () => {
     const [isTimerStopped, setIsTimerStopped] = useState(false);
     const [remainingMines, setRemainingMines] = useState(99);
     const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.notStarted);
-    let isClickAllowed = true;
+    const [isClickAllowed,setIsClickAllowed] = useState(true);
 
     useEffect(() => {
         setlogicalGameState(initGameState())
@@ -58,13 +58,14 @@ export const Board: FunctionComponent = () => {
             setPlayerState(PlayerState.lost);
         }
         else {
-            if (!isGameFinished(result.newGameState as [ICell[]])) {
+            if (!isGameFinished(381)) {
                 setMouseClicks(false)();
             }
             else {
                 setIsTimerStopped(true)
                 setMouseClicks(true)();
                 setPlayerState(PlayerState.won);
+                setRemainingMines(0);
             }
         }
     }
@@ -72,12 +73,12 @@ export const Board: FunctionComponent = () => {
     const setMouseClicks = (isDisabled: boolean): () => void => {
         if (isDisabled) {
             return () => {
-                isClickAllowed = false;
+                setIsClickAllowed(false);
             }
         }
         else {
             return () => {
-                isClickAllowed = true;
+                setIsClickAllowed(true);
             }
         }
     }
