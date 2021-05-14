@@ -1,12 +1,21 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
+import { ICell } from '../../interfaces/ICell';
 import { Cell } from '../cell/cell';
 import './mine-field.css';
+import {gameStore} from '../../game-state-managment/game-state-managment';
 
 export interface IMineFieldPram {
     rightClickAction: (row: number, col: number) => void;
     leftClickAction: (row: number, col: number) => void;    
+    gameState:[ICell[]]
 }
+
 export const MineField: FunctionComponent<IMineFieldPram> = (props) => {
+
+    useEffect(()=>{        
+        gameStore.dispatch({type:props.gameState});
+    });
+    
     const mineField =
         <div className={'width-fill'}>
             <div className={'mine-field'}>
@@ -22,7 +31,7 @@ const createMineField = (
     const lines: JSX.Element[] = [];
     for (let i = 0; i <= 15; i++) {
         const line = (
-            <div className={'line'}>
+            <div className={'line'} key={i}>
                 {
                     ((): JSX.Element[] => {
                         const cells: JSX.Element[] = [];
@@ -32,6 +41,7 @@ const createMineField = (
                                 col={j}
                                 leftClickAction={leftClickAction}
                                 righClickAction={rightClickAction}
+                                key = {j}
                             />
                             cells.push(cell);
                         }

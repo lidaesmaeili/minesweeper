@@ -24,36 +24,35 @@ export const Board: FunctionComponent = () => {
     }, []);
 
     const leftClickAction = (row: number, col: number): void => {
-        if (!isClickAllowed)
+        if (!isClickAllowed || logicalGameState==null)
             return;
-
-        let result: ICleanFieldResult | null = null;
+        
         setMouseClicks(true)();
-        if (!hasGameStarted) {
-            scatterMines(row, col).then((pairs: IPair[]) => {
-                setPlayerState(PlayerState.playing);
-                setIsGameStarted(true);
-                const newLogicalGameState = logicalGameState as [ICell[]];
-                pairs.forEach((p) => {
-                    newLogicalGameState[p.row][p.col].hasMine = true;
-                })
-                result =
-                    cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;
-                setlogicalGameState(result.newGameState);
-                handleBoardAfterLeftClick(result)
+        if (!hasGameStarted) {           
+            const pairs = scatterMines(row, col)
+            setPlayerState(PlayerState.playing);
+            setIsGameStarted(true);
+            const newLogicalGameState = [...logicalGameState];
+            pairs.forEach((p) => {
+                newLogicalGameState[p.row][p.col].hasMine = true;
             })
-        }
-        else {
-            const newLogicalGameState = logicalGameState as [ICell[]];
-            result =
+            const result =
                 cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;
+            setlogicalGameState(result.newGameState);
+            handleBoardAfterLeftClick(result);
+            return;
+        }
+        else {           
+            const newLogicalGameState = [...logicalGameState] ;
+            const result =
+                cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;           
             setlogicalGameState(result.newGameState);
             handleBoardAfterLeftClick(result);
         }
     }
 
     const handleBoardAfterLeftClick = (result: ICleanFieldResult) => {
-        if (result.isExploded) {
+        if (result.isExploded) {           
             setIsTimerStopped(true)
             setMouseClicks(true)();
             setPlayerState(PlayerState.lost);
@@ -91,28 +90,28 @@ export const Board: FunctionComponent = () => {
         if (logicalGameState[row][col].isOpened)
             return;
         setMouseClicks(true)();
-        const newLogicalGameState = logicalGameState;
-        if (newLogicalGameState[row][col].content === Content.unopenedBlock) {            
+        const newLogicalGameState = [...logicalGameState];
+        if (newLogicalGameState[row][col].content === Content.unopenedBlock) {
             newLogicalGameState[row][col].content = Content.flag;
             setRemainingMines(remainingMines - 1);
-            setlogicalGameState(newLogicalGameState);
+            setlogicalGameState(newLogicalGameState as [ICell[]]);
             setMouseClicks(false)();
             return;
         }
         else if (newLogicalGameState[row][col].content === Content.flag) {
             newLogicalGameState[row][col].content = Content.questonMark;
             setRemainingMines(remainingMines + 1);
-            setlogicalGameState(newLogicalGameState);
+            setlogicalGameState(newLogicalGameState as [ICell[]]);
             setMouseClicks(false)();
             return;
         }
         else if (newLogicalGameState[row][col].content === Content.questonMark) {
             newLogicalGameState[row][col].content = Content.unopenedBlock;
-            setlogicalGameState(newLogicalGameState);
+            setlogicalGameState(newLogicalGameState as [ICell[]]);
             setMouseClicks(false)();
             return;
         }
-        else {            
+        else {
             setMouseClicks(false)();
             return;
         }
@@ -135,7 +134,8 @@ export const Board: FunctionComponent = () => {
                 </div>
                 <MineField
                     leftClickAction={leftClickAction}
-                    rightClickAction={rightClickAction} />
+                    rightClickAction={rightClickAction}
+                    gameState={logicalGameState as [ICell[]]} />
             </div>
         </Fragment>
 

@@ -15,6 +15,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.transparent-back-color{
+  background-color:transparent;
+}
+.wheat-back-color{
+  background-color:wheat;
+}
+.c6c6c6-back-color{
+  background-color: #c6c6c6;
+}
+.blue-color{
+  color:  blue;
+}
+.green-color{
+  color: green;
+}
+.maroon-color{
+  color:maroon;
+}
+.gray-color{
+  color:darkslategray;
+}
+.firebrick-color{
+  color:firebrick
+}
+.indigo-color{
+  color:indigo
+}
+.tomato-color{
+  color:tomato;
+}
+.brown-color{
+  color:saddlebrown
+}
 .width-full{
   width: 100%; 
 }
