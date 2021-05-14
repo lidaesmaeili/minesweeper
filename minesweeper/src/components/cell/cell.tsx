@@ -1,4 +1,4 @@
-import { useState, FunctionComponent } from 'react';
+import { useState, FunctionComponent, useEffect } from 'react';
 import { Content } from '../../enum/Content';
 import { ClearedBlock } from '../cleared-block/cleared-block';
 import { ExplodedMine } from '../exploded-mine/exploded-mine';
@@ -9,6 +9,7 @@ import { UnopenedBlock } from '../unopened-block/unopened-block';
 import { gameStore } from '../../game-state-managment/game-state-managment';
 import './cell.css';
 import { ICell } from '../../interfaces/ICell';
+import { cleanup } from '@testing-library/react';
 export interface ICellParam {
     row: number;
     col: number;
@@ -18,26 +19,26 @@ export interface ICellParam {
 
 export const Cell: FunctionComponent<ICellParam> = (props) => {
 
-    const setCellCss = (isOpened:boolean,content:Content):void=>{
+    const setCellCss = (isOpened: boolean, content: Content): void => {
         const cellClass = 'cell'
         const solidBorder = 'solidBorder';
         const doteedBorder = 'dotedBorder';
         let cssClasses = cellClass;
-        if(!isOpened){
-            cssClasses +=' ';
-            cssClasses+=solidBorder;            
+        if (!isOpened) {
+            cssClasses += ' ';
+            cssClasses += solidBorder;
         }
-        else{
-            if(content === Content.explodedMine){
+        else {
+            if (content === Content.explodedMine) {
                 cssClasses += ' ';
-                cssClasses+=solidBorder;                
+                cssClasses += solidBorder;
             }
-            else if(content===Content.number || content===Content.clearedBlock){
+            else if (content === Content.number || content === Content.clearedBlock) {
                 cssClasses += ' ';
-                cssClasses+=doteedBorder;                
+                cssClasses += doteedBorder;
             }
-        }  
-        setCssClasses(cssClasses)     
+        }
+        setCssClasses(cssClasses)
     }
 
     const [cellId] =
@@ -51,18 +52,33 @@ export const Cell: FunctionComponent<ICellParam> = (props) => {
     const [cssClasses, setCssClasses] =
         useState<string>('solidBorder');
 
-    gameStore.subscribe(() => {
-        if (gameStore.getState().gameState == null) {
-            return;
+    const isEqual = (cell: ICell): boolean => {
+        const isEqual = (cell.isOpened !== isOpened ||
+            cell.content !== content ||
+            cell.adjacentMinesCount !== adjacentMinesCount) ? false : true;
+        return isEqual;
+    }
+
+    useEffect(() => {
+        const unSubscribe = gameStore.subscribe(() => {
+            if (gameStore.getState().gameState == null)
+                return;
+            const gameState = (gameStore.getState().gameState as unknown) as [ICell[]];
+            const cellState = gameState[row][col];
+            setContent(cellState.content);
+            setIsOpened(cellState.isOpened);
+            setCellCss(cellState.isOpened, cellState.content);
+            if (cellState.adjacentMinesCount != null)
+                setAdjacentMinesCount(cellState.adjacentMinesCount);
+        });
+
+        return () => {         
+            unSubscribe();
         }
-        const gameState = (gameStore.getState().gameState as unknown) as [ICell[]];
-        const cellState = gameState[row][col];
-        setContent(cellState.content);
-        setIsOpened(cellState.isOpened);
-        setCellCss(cellState.isOpened,cellState.content);
-        if (cellState.adjacentMinesCount != null)
-            setAdjacentMinesCount(cellState.adjacentMinesCount);
-    })   
+    }, [])
+
+
+
 
     const cell =
         <div
@@ -101,6 +117,8 @@ const setCellContent = (isOpened: boolean, content: Content, adjacentMinesCount:
     }
     return <UnopenedBlock />;
 }
+
+
 
 
 

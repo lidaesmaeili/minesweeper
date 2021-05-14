@@ -17,18 +17,23 @@ export const Board: FunctionComponent = () => {
     const [isTimerStopped, setIsTimerStopped] = useState(false);
     const [remainingMines, setRemainingMines] = useState(99);
     const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.notStarted);
-    const [isClickAllowed,setIsClickAllowed] = useState(true);
+    const [isClickAllowed, setIsClickAllowed] = useState(true);
 
     useEffect(() => {
         setlogicalGameState(initGameState())
     }, []);
 
     const leftClickAction = (row: number, col: number): void => {
-        if (!isClickAllowed || logicalGameState==null)
+        if (!isClickAllowed || logicalGameState == null)
             return;
-        
+        if (logicalGameState[row][col].isOpened ||
+            logicalGameState[row][col].content === Content.flag ||
+            logicalGameState[row][col].content === Content.questonMark
+        )
+            return;
+
         setMouseClicks(true)();
-        if (!hasGameStarted) {           
+        if (!hasGameStarted) {
             const pairs = scatterMines(row, col)
             setPlayerState(PlayerState.playing);
             setIsGameStarted(true);
@@ -42,17 +47,17 @@ export const Board: FunctionComponent = () => {
             handleBoardAfterLeftClick(result);
             return;
         }
-        else {           
-            const newLogicalGameState = [...logicalGameState] ;
+        else {
+            const newLogicalGameState = [...logicalGameState];
             const result =
-                cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;           
+                cleanField(row, col, newLogicalGameState as [ICell[]]) as ICleanFieldResult;
             setlogicalGameState(result.newGameState);
             handleBoardAfterLeftClick(result);
         }
     }
 
     const handleBoardAfterLeftClick = (result: ICleanFieldResult) => {
-        if (result.isExploded) {           
+        if (result.isExploded) {
             setIsTimerStopped(true)
             setMouseClicks(true)();
             setPlayerState(PlayerState.lost);
