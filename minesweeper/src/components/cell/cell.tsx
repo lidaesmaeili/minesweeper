@@ -50,14 +50,7 @@ export const Cell: FunctionComponent<ICellParam> = (props) => {
     const [col] = useState(props.col);
     const [adjacentMinesCount, setAdjacentMinesCount] = useState(0);
     const [cssClasses, setCssClasses] =
-        useState<string>('solidBorder');
-
-    const isEqual = (cell: ICell): boolean => {
-        const isEqual = (cell.isOpened !== isOpened ||
-            cell.content !== content ||
-            cell.adjacentMinesCount !== adjacentMinesCount) ? false : true;
-        return isEqual;
-    }
+        useState<string>('solidBorder');   
 
     useEffect(() => {
         const unSubscribe = gameStore.subscribe(() => {

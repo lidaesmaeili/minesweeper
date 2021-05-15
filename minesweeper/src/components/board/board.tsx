@@ -63,7 +63,7 @@ export const Board: FunctionComponent = () => {
             setPlayerState(PlayerState.lost);
         }
         else {
-            if (!isGameFinished(381)) {
+            if (!isGameFinished(381,logicalGameState as [ICell[]])){
                 setMouseClicks(false)();
             }
             else {
