@@ -184,8 +184,16 @@ export const getAdjacentCellsIndex = (
     return adjacentCellsIndex;
 }
 
-export const isGameFinished = (clearCellCount: number): boolean => {
-    console.log(totalClearedCells)
-    const isGameFinished = (clearCellCount === totalClearedCells) ? true : false;
-    return isGameFinished;
+export const isGameFinished = (clearedCells: number,gameState:[ICell[]]): boolean => {    
+    let totalClreadCels = 0;    
+    for(let row=0;row<=15;row++){
+        for(let col=0;col<=29;col++){
+            if(gameState[row][col].isOpened){
+                totalClreadCels++;
+            }
+        }
+    }
+    console.log('total',totalClreadCels);
+    const isFinished = (clearedCells === totalClreadCels)?true:false;
+    return isFinished;
 }
