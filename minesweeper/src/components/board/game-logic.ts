@@ -1,6 +1,6 @@
 import { Content } from '../../enum/Content';
 import { ICell } from '../../interfaces/ICell';
-let totalClearedCells = 0;
+
 export interface IPair {
     row: number;
     col: number;
@@ -30,8 +30,16 @@ export const scatterMines = (safeRow: number, safeCol: number):
         reservedCells[randomRow][randomCol] = true;
         pairs.push({ row: randomRow, col: randomCol });
         counter = counter + 1;
-    }
-    return pairs
+    }    
+    console.log( 'CHEAT NOTE', pairs.sort((p1, p2) => {
+        if(p1.row>p2.row)
+            return 1;
+        else
+            return -1;
+
+    }));
+   
+    return pairs;
 }
 
 export const cleanField =
@@ -80,7 +88,6 @@ export const openCell = (rowUpperBound: number,
         const popedCellIndex = stack.pop();
         if (popedCellIndex == undefined)
             break;
-        totalClearedCells++;
         gameState[popedCellIndex.row][popedCellIndex.col].isOpened = true;
         const adjacentCellsIndex =
             getAdjacentCellsIndex(rowUpperBound, colUpperBound, popedCellIndex.row, popedCellIndex.col);
@@ -184,16 +191,15 @@ export const getAdjacentCellsIndex = (
     return adjacentCellsIndex;
 }
 
-export const isGameFinished = (clearedCells: number,gameState:[ICell[]]): boolean => {    
-    let totalClreadCels = 0;    
-    for(let row=0;row<=15;row++){
-        for(let col=0;col<=29;col++){
-            if(gameState[row][col].isOpened){
+export const isGameFinished = (clearedCells: number, gameState: [ICell[]]): boolean => {
+    let totalClreadCels = 0;
+    for (let row = 0; row <= 15; row++) {
+        for (let col = 0; col <= 29; col++) {
+            if (gameState[row][col].isOpened) {
                 totalClreadCels++;
             }
         }
     }
-    console.log('total',totalClreadCels);
-    const isFinished = (clearedCells === totalClreadCels)?true:false;
+    const isFinished = (clearedCells === totalClreadCels) ? true : false;
     return isFinished;
 }
