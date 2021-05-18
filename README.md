@@ -12,3 +12,4 @@ Minesweeper is a 2D, single-player game. What a player needs to do to win the ga
 # Players mindset
 If losers hadn’t entrusted their steps to chance only, they would have won the game! This game has nothing to do with sheer chance! Players need to analyze the disclosed numbers and make the right, safe decisions! I am not going to deny that chance plays a role in this game at all! Yes, there might be a situation in which you have to flip a coin or roll a dice to click an unopened cell! However, the mentioned condition is almost rare, and it causes your heart to pump a little faster anyway!
 
+![Losers!](https://media-exp1.licdn.com/dms/image/C4D12AQHvPBnR5b_eyw/article-inline_image-shrink_1000_1488/0/1621229801077?e=1626912000&v=beta&t=EMrrohgVu6rvQF5eP30TMZ3gSz4IOP-TZBJdeFFOb-0)
